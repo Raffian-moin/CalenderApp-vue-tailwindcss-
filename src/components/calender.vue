@@ -10,11 +10,26 @@
     <p class="my-2 h-10 text-center" style="width:14.28%" v-for="day in days" :key="day.index">{{day}}</p>
     </section>
     <section class="flex flex-wrap">
-      <p class="h-10 text-center" style="width:14.28%" v-for="num in daysOfMonth(currentYear,currentMonth)" :key="num.index">{{num}}</p>
+     <!--  <p class="h-10 text-center" style="width:14.28%" v-for="firstDayOfMonth(currentYear,currentMonth) in daysOfMonth(currentYear,currentMonth)" :key="num.index">{{num}}</p> -->
+
+      <p
+        class="text-center"
+        style="width: 14.28%"
+        v-for="num in firstDayOfMonth()"
+        :key="num"
+      ></p>
+      <p
+        class="text-center"
+        style="width: 14.28%"
+        v-for="num in daysOfMonth()"
+        :key="num"
+      >
+        {{ num }}
+      </p>
     </section>
     <section class="mx-2 flex justify-between">
-      <p @click="previous">previous</p>
-      <p @click="next">next</p>
+      <button @click="previous">previous</button>
+      <button @click="next">next</button>
     </section>
   </div>
 </template>
@@ -28,25 +43,44 @@ export default {
   data(){
     return{
       currentYear:new Date().getFullYear(),
-      currentMonth:new Date().getMonth()+1,
-      currentMonthName:new Date().toLocaleString("default", { month: "long" }),
+      currentMonth:new Date().getMonth(),
       days:['sat','sun','mon','tue','wed','thur','fri'],
     }
   },
 
   methods:{
-    daysOfMonth:function(year,month){
-      return new Date(year,month, 0).getDate(); // 0 + number of days
+    daysOfMonth:function(){
+      return new Date(this.currentYear,this.currentMonth+1, 0).getDate(); // 0 + number of days
     },
-  },
-    computed:{
+    firstDayOfMonth(){
+      return new Date(this.currentYear,this.currentMonth,1).getDay()+1;
+    },
       next:function(){
-        return this.currentMonth++;
+        
+       if(this.currentMonth==11){
+          this.currentMonth=0;
+          this.currentYear++;
+        }else{
+          this.currentMonth++;
+        }
       },
       previous:function(){
-        return this.currentMonth--;
-      }
-    }
+        // currentMonthName:new Date(this.).toLocaleString("default", { month: "long" }),
+        if(this.currentMonth==0){
+          this.currentMonth=11;
+          this.currentYear--;
+        }else{
+          this.currentMonth--;
+        }
+        
+        
+      },
+  },
+  computed:{
+    currentMonthName:function(){
+      return new Date(this.currentYear,this.currentMonth).toLocaleString("default", { month: "long" });
+    },
+  },
   }
 </script>
 
