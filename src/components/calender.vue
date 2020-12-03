@@ -22,6 +22,7 @@
         class="text-center"
         style="width: 14.28%"
         v-for="num in daysOfMonth()"
+        :class="currentDateClass(num)"
         :key="num"
       >
         {{ num }}
@@ -44,6 +45,7 @@ export default {
     return{
       currentYear:new Date().getFullYear(),
       currentMonth:new Date().getMonth(),
+      
       days:['sat','sun','mon','tue','wed','thur','fri'],
     }
   },
@@ -75,11 +77,17 @@ export default {
         
         
       },
+      currentDateClass:function(num){
+      const calenderFullDate = new Date(this.currentYear,this.currentMonth,num).toDateString();
+      const currentDate = new Date().toDateString();
+      return calenderFullDate===currentDate?"text-yellow-600":"";
+    },
   },
   computed:{
     currentMonthName:function(){
       return new Date(this.currentYear,this.currentMonth).toLocaleString("default", { month: "long" });
     },
+    
   },
   }
 </script>
